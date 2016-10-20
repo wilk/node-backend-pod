@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-backend
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: node-backend
+    spec:
+      containers:
+      - name: node-backend
+        image: wilkib/node-backend
+        ports:
+          - containerPort: 3000
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-frontend
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: node-frontend
+    spec:
+      containers:
+      - name: node-frontend
+        image: wilkib/node-frontend
+        env:
+        - name: LOADBALANCER_REF
+          value: "node-app"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app
+  labels:
+    service: lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: node-backend
+    anagrafica-app: node-backend-anagrafica
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  - protocol: TCP
+    port: 443
+    targetPort: 3000
