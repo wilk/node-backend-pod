@@ -43,7 +43,6 @@ spec:
   type: LoadBalancer
   selector:
     app: node-backend
-    anagrafica-app: node-backend-anagrafica
   ports:
   - protocol: TCP
     port: 80
